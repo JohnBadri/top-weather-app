@@ -1,6 +1,3 @@
-import './styles/style.css';
-import { sayHi } from './js/function';
-import icon from './images/icon.png';
+import weather from './js/weather';
 
-const content = document.querySelector('.content');
-content.textContent = sayHi();
+weather();
