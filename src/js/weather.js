@@ -1,21 +1,43 @@
+const addDetails = (cityDetails) => {
+  const mainContent = document.querySelector('.city-content');
+  mainContent.innerHTML = '';
+  const prefixes = {
+    location: 'Location',
+    localtime: 'Date & Time',
+    weatherDesc: 'Weather Description',
+    tempC: 'Temperature',
+    windSpeed: 'Wind Speed',
+    windDegree: 'Wind Degree',
+    windDir: 'Wind Direction',
+  };
+
+  Object.entries(cityDetails).forEach(([key, value]) => {
+    const div = document.createElement('div');
+    const prefix = prefixes[key];
+    if (prefix === 'Wind Degree') {
+      div.textContent = `${prefix}: ${value}°`;
+    } else if (prefix === 'Temperature') {
+      div.textContent = `${prefix}: ${value}°C`;
+    } else if (prefix === 'Wind Speed') {
+      div.textContent = `${prefix}: ${value} KM/H`;
+    } else {
+      div.textContent = `${prefix}: ${value}`;
+    }
+    div.classList.add(key);
+    mainContent.appendChild(div);
+  });
+};
+
 const getWeather = async (url) => {
   const response = await fetch(url);
   const weather = await response.json();
+  const input = document.querySelector('.cityInput');
+
   try {
-    const CityObject = (
-      name,
-      time,
-      desc,
-      icon,
-      temp,
-      speed,
-      degree,
-      direction,
-    ) => ({
+    const CityObject = (name, time, desc, temp, speed, degree, direction) => ({
       location: name,
       localtime: time,
       weatherDesc: desc,
-      weatherIcon: icon,
       tempC: temp,
       windSpeed: speed,
       windDegree: degree,
@@ -26,23 +48,22 @@ const getWeather = async (url) => {
       weather.location.name,
       weather.location.localtime,
       weather.current.condition.text,
-      weather.current.condition.icon,
       weather.current.temp_c,
       weather.current.wind_kph,
       weather.current.wind_degree,
       weather.current.wind_dir,
     );
+    input.value = '';
+    input.placeholder = city.location;
+    addDetails(city);
     return city;
   } catch (error) {
-    const errorMessage = 'Please input a valid city name';
+    input.value = '';
+    input.placeholder = 'City name is not valid';
     console.error('Error fetching weather:', error);
-    return errorMessage;
+    return null;
   }
 };
-
-// const addDetails = (cityDetails) => {
-//   const mainContent = document.querySelector('.content');
-// };
 
 const weather = () => {
   const apiKey = '14665755af7243cfbb4105110230211';
@@ -59,7 +80,7 @@ const weather = () => {
     url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
     try {
       const city = await getWeather(url);
-      //   addDetails(city);
+      addDetails(city);
     } catch (error) {
       console.error('Error fetching weather:', error);
     }
@@ -67,13 +88,3 @@ const weather = () => {
 };
 
 export default weather;
-
-// const getImage = async (searchTerm) => {
-//   const apiKeyGiphy = 'SfHwYIDhkDHSH6WYDLRRqP7XK72OWqnp';
-//   const search = encodeURIComponent(searchTerm);
-//   let url = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKeyGiphy}&s=${search}`;
-//   const img = document.querySelector('img');
-//   const response = await fetch(url);
-//   const catData = await response.json();
-//   img.src = catData.data.images.original.url;
-// };
