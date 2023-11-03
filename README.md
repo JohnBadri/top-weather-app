@@ -22,4 +22,4 @@ The project uses the [WeatherAPI](https://www.weatherapi.com/) to fetch real-tim
 
 ## Contribution
 
-Feel free to contribute to the project by suggesting new features or improvements. You could propose enhancements like email syntax verification or more complex password requirements.
+Feel free to contribute to the project by suggesting new features or improvements.
